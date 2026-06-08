@@ -18,10 +18,10 @@
     --color-header-alt: #151515;
     --color-row-alt: #111;
     --color-row-hover: #1e1e1e;
-    --color-badge-bg: rgba(255,255,255,0.08);
-    --color-badge-text: #d0d0d0;
     --color-status: #bbb;
     --color-error: #faa;
+    --color-drop-hover: rgba(116, 116, 255, 0.2);
+    --color-drop-border-hover: #66f;
 }
 
 @media (prefers-color-scheme: light) {
@@ -38,10 +38,10 @@
         --color-header-alt: #ddd;
         --color-row-alt: #f7f7f7;
         --color-row-hover: #e5e5e5;
-        --color-badge-bg: rgba(0,0,0,0.08);
-        --color-badge-text: #333;
         --color-status: #555;
         --color-error: #a00;
+        --color-drop-hover: rgba(102, 102, 255, 0.2);
+        --color-drop-border-hover: #66f;
     }
 }
 
@@ -66,6 +66,22 @@ header p {
     margin: 0;
     color: var(--color-muted);
 }
+
+button {
+    padding: 10px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    background: var(--color-header-alt);
+}
+button:hover,
+button:focus {
+    background: var(--color-drop-hover);
+    border-color: var(--color-drop-border-hover);
+}
+
 .drop-zone {
     margin-top: 12px;
     padding: 16px;
@@ -75,6 +91,11 @@ header p {
     text-align: center;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 .drop-zone p {
     margin: 0;
@@ -82,12 +103,12 @@ header p {
     font-size: 14px;
 }
 .drop-zone.drag-active {
-    border-color: #66f;
-    background: rgba(102, 102, 255, 0.1);
-    color: #66f;
+    border-color: var(--color-drop-border-hover);
+    background: var(--color-drop-hover);
+    color: var(--color-drop-border-hover);
 }
 .drop-zone.drag-active p {
-    color: #66f;
+    color: var(--color-drop-border-hover);
 }
 body.drag-active-global {
     background: rgba(0, 0, 0, 0.5);
@@ -262,15 +283,7 @@ td {
 .hide-notes .note-cell {
     display: none;
 }
-.badge {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 5px;
-    background: var(--color-badge-bg);
-    color: var(--color-badge-text);
-    font-size: 12px;
-    margin: 1px 2px 1px 0;
-}
+
 .status {
     margin-top: 12px;
     color: var(--color-status);

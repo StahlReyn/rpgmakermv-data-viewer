@@ -99,7 +99,7 @@
                         <th class="short-stat">LUK</th>
                         <th class="long-stat">EXP</th>
                         <th class="long-stat">Gold</th>
-                        <th class="drop-stat">Drop Items</th>
+                        <th class="drop-stat">Item Drops</th>
                         <th class="trait-stat">Traits</th>
                         <th class="note-stat">Note</th>
                     </tr>
@@ -107,10 +107,12 @@
                 <tbody id="table-body"></tbody>
             </table>
         </div>
+        <div class="status" id="status">Loading enemy stats…</div>
         <div id="dropZone" class="drop-zone">
             <p>📥 Drop JSON file here</p>
+            <button id="selectFileButton" type="button">Select JSON file</button>
+            <input id="fileInput" type="file" accept=".json,application/json" hidden />
         </div>
-        <div class="status" id="status">Loading enemy stats…</div>
     </section>
     <script src="enemy-viewer.js"></script>
 </body>

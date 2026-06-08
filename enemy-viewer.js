@@ -13,6 +13,8 @@ const TABLE = document.querySelector('table');
 const TABLE_BODY = document.getElementById('table-body');
 const STATUS = document.getElementById('status');
 const DROP_ZONE = document.getElementById('dropZone');
+const SELECT_FILE_BUTTON = document.getElementById('selectFileButton');
+const FILE_INPUT = document.getElementById('fileInput');
 const THEME_STORAGE_KEY = 'enemyViewerThemeMode';
 let droppedData = null;
 
@@ -365,8 +367,24 @@ function handleDrop(event) {
     if (files.length === 0) return;
 
     const file = files[0];
+    processSelectedFile(file);
+}
+
+function openFileSelector(event) {
+    // event.preventDefault();
+    FILE_INPUT.value = '';
+    FILE_INPUT.click();
+}
+
+function handleFileInputChange(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    processSelectedFile(file);
+}
+
+function processSelectedFile(file) {
     if (!file.name.endsWith('.json')) {
-        STATUS.innerHTML = `<span class="error">Please drop a JSON file.</span>`;
+        STATUS.innerHTML = `<span class="error">Please select a JSON file.</span>`;
         return;
     }
 
@@ -395,10 +413,12 @@ HIDE_NO_NAME.addEventListener('change', filterAndSort);
 HIDE_NOTES.addEventListener('change', filterAndSort);
 HIDE_MAG.addEventListener('change', filterAndSort);
 THEME_MODE.addEventListener('change', setThemePreference);
+SELECT_FILE_BUTTON.addEventListener('click', openFileSelector);
+DROP_ZONE.addEventListener('click', openFileSelector);
+FILE_INPUT.addEventListener('change', handleFileInputChange);
 document.addEventListener('dragover', handleDragOver);
 document.addEventListener('dragleave', handleDragLeave);
 document.addEventListener('drop', handleDrop);
-
 
 loadThemePreference();
 loadEnemies();
