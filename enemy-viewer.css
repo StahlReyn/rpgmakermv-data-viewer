@@ -140,7 +140,7 @@ body.drag-active-global * {
     margin-top: 16px;
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 12px 24px;
     align-items: center;
 }
 .controls label {
@@ -217,9 +217,6 @@ th.note-stat {
     width: 32rem;
 }
 
-table.hide-mag .param-mag {
-    display: none;
-}
 .single-line tbody tr {
     height: 40px;
 }
@@ -279,8 +276,7 @@ td {
 .single-line .cell > ul li:last-child::after {
     content: '';
 }
-.hide-notes .note-stat,
-.hide-notes .note-cell {
+:is(.hide-notes, .hide-mag) .hide {
     display: none;
 }
 
