@@ -260,7 +260,7 @@ function renderTable(rows) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${escapeHtml(enemy.id)}</td>
-            <td>${escapeHtml(enemy.name || '-')}</td>
+            <td>${escapeHtml(enemy.name || '')}</td>
             <td>${escapeHtml(enemy.hp)}</td>
             <td>${escapeHtml(enemy.mp)}</td>
             <td>${escapeHtml(enemy.atk)}</td>
@@ -287,7 +287,27 @@ function filterAndSort() {
 
     let filtered = enemies;
     if (query) {
-        filtered = enemies.filter(enemy => enemy.searchText.includes(query));
+        const tokens = query.match(/(-?"[^"]+"|[^"\s]+)/g) || [];
+        const positiveTerms = [];
+        const negativeTerms = [];
+
+        tokens.forEach(token => {
+            const normalized = token.replace(/^"|"$/g, '');
+            if (normalized.startsWith('-') && !normalized.startsWith('-"')) {
+                negativeTerms.push(normalized.slice(1));
+            } else if (token.startsWith('-"') && token.endsWith('"')) {
+                negativeTerms.push(normalized.slice(1));
+            } else {
+                positiveTerms.push(normalized.replace(/^\-/, ''));
+            }
+        });
+
+        filtered = enemies.filter(enemy => {
+            const text = enemy.searchText;
+            const matchesPositive = positiveTerms.every(term => text.includes(term));
+            const excludesNegative = negativeTerms.every(term => !text.includes(term));
+            return matchesPositive && excludesNegative;
+        });
     }
 
     filtered.sort((a, b) => {

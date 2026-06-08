@@ -1,87 +1,4 @@
-/* @font-face {
-  font-family: 'OMORI_GAME2';
-  src: url('./fonts/OMORI_GAME2.ttf') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-} */
-
-:root {
-    --color-text: #eef;
-    --color-muted: #aaa;
-    --color-secondary: #ccc;
-    --color-border: #333;
-    --color-border-muted: #222;
-    --color-bg: #111;
-    --color-surface: #121212;
-    --color-header: #181818;
-    --color-header-alt: #151515;
-    --color-row-alt: #111;
-    --color-row-hover: #1e1e1e;
-    --color-status: #bbb;
-    --color-error: #faa;
-    --color-drop-hover: rgba(116, 116, 255, 0.2);
-    --color-drop-border-hover: #66f;
-}
-
-@media (prefers-color-scheme: light) {
-    body:not(.theme-light):not(.theme-dark),
-    body.theme-light {
-        --color-text: #111;
-        --color-muted: #555;
-        --color-secondary: #444;
-        --color-border: #ccc;
-        --color-border-muted: #ddd;
-        --color-bg: #f5f5f5;
-        --color-surface: #fff;
-        --color-header: #ededed;
-        --color-header-alt: #ddd;
-        --color-row-alt: #f7f7f7;
-        --color-row-hover: #e5e5e5;
-        --color-status: #555;
-        --color-error: #a00;
-        --color-drop-hover: rgba(102, 102, 255, 0.2);
-        --color-drop-border-hover: #66f;
-    }
-}
-
-/* Dark is the default theme via :root, so explicit dark mode does not need a duplicate rule. */
-
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    color: var(--color-text);
-    background: var(--color-bg);
-}
-header {
-    padding: 20px;
-    background: var(--color-header);
-    border-bottom: 1px solid var(--color-border);
-}
-header h1 {
-    margin: 0 0 12px;
-    font-size: 24px;
-}
-header p {
-    margin: 0;
-    color: var(--color-muted);
-}
-
-button {
-    padding: 10px 16px;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    color: var(--color-text);
-    cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease;
-    background: var(--color-header-alt);
-}
-button:hover,
-button:focus {
-    background: var(--color-drop-hover);
-    border-color: var(--color-drop-border-hover);
-}
-
+/* Drag and drop styles */
 .drop-zone {
     margin-top: 12px;
     padding: 16px;
@@ -117,6 +34,8 @@ body.drag-active-global {
 body.drag-active-global * {
     pointer-events: none;
 }
+
+
 .header-top {
     display: flex;
     justify-content: space-between;
@@ -150,25 +69,48 @@ body.drag-active-global * {
     font-size: 14px;
     color: var(--color-secondary);
 }
-input, select {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--color-border);
-    background: var(--color-bg);
-    color: var(--color-text);
-}
+
 .controls input,
 .controls select {
     min-width: 180px;
 }
-input[type="checkbox"] {
-    cursor: pointer;
+
+.controls input[type="checkbox"] {
     transform: scale(1.3);
     min-width: auto;
 }
+
+.search-control {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.search-control label {
+    display: block;
+    color: var(--color-secondary);
+    font-size: 14px;
+}
+.search-control input {
+    width: 100%;
+    min-width: 0;
+}
+.search-description {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 13px;
+}
+.search-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Table styles */
 .content {
     padding: 16px;
 }
+
 .table-wrap {
     overflow: auto;
     max-height: 90vh;
@@ -193,7 +135,6 @@ th, td {
     text-align: left;
     vertical-align: top;
 }
-
 
 th.name {
     width: 12rem;
@@ -284,6 +225,7 @@ td {
     display: none;
 }
 
+/* Status and error messages */
 .status {
     margin-top: 12px;
     color: var(--color-status);

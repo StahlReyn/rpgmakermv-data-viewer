@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enemy Stats Viewer</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="enemy-viewer.css">
 </head>
 <body>
@@ -25,10 +26,14 @@
             </div>
         </div>
         <div class="controls">
-            <label>
-                Search:
-                <input id="search" type="search" placeholder="Name, id, battler or note" />
-            </label>
+            <div class="search-control">
+                <div class="search-input">
+                    <label for="search">Search:</label>
+                    <input id="search" type="search" placeholder="Search enemies" value="-RESERVED"/>
+                </div>
+                <small class="search-description">Use <code>-term</code> to exclude matching enemies.</small>
+                <hr />
+            </div>
             <label>
                 Sort by:
                 <select id="sortKey">
