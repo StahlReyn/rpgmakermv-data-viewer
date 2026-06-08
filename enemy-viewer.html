@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enemy Stats Viewer</title>
+    <link rel="stylesheet" href="enemy-viewer.css">
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div>
+                <h1>Enemy Stats Viewer</h1>
+                <p>Loads <code>data/Enemies.json</code> and renders a sortable enemy table.</p>
+            </div>
+            <div class="theme-control">
+                <label>
+                    Theme:
+                    <select id="themeMode">
+                        <option value="browser">Browser</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="controls">
+            <label>
+                Search:
+                <input id="search" type="search" placeholder="Name, id, battler or note" />
+            </label>
+            <label>
+                Sort by:
+                <select id="sortKey">
+                    <option value="id">ID</option>
+                    <option value="name">Name</option>
+                    <option value="hp">HP</option>
+                    <option value="mp">MP</option>
+                    <option value="atk">ATK</option>
+                    <option value="def">DEF</option>
+                    <option value="mat">MAT</option>
+                    <option value="mdf">MDF</option>
+                    <option value="agi">AGI</option>
+                    <option value="luk">LUK</option>
+                    <option value="exp">EXP</option>
+                    <option value="gold">Gold</option>
+                </select>
+            </label>
+            <label>
+                ID min:
+                <input id="minId" type="number" value="1500" min="0" />
+            </label>
+            <label>
+                ID max:
+                <input id="maxId" type="number" value="2000" min="0" />
+            </label>
+            <label>
+                Hide blank names:
+                <input id="hideNoName" type="checkbox" checked />
+            </label>
+            <label>
+                Hide notes:
+                <input id="hideNotes" type="checkbox" checked />
+            </label>
+            <label>
+                Hide MAT/MDF:
+                <input id="hideMag" type="checkbox" checked />
+            </label>
+            <label>
+                Direction:
+                <select id="sortDir">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </label>
+            <label>
+                Row mode:
+                <select id="rowMode">
+                    <option value="singleline">Single line</option>
+                    <option value="multiline">Multiline</option>
+                </select>
+            </label>
+        </div>
+    </header>
+    <section class="content">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="long-stat">ID</th>
+                        <th class="name">Name</th>
+                        <th class="long-stat">HP</th>
+                        <th class="long-stat">MP</th>
+                        <th class="short-stat">ATK</th>
+                        <th class="short-stat">DEF</th>
+                        <th class="short-stat param-mag">MAT</th>
+                        <th class="short-stat param-mag">MDF</th>
+                        <th class="short-stat">AGI</th>
+                        <th class="short-stat">LUK</th>
+                        <th class="long-stat">EXP</th>
+                        <th class="long-stat">Gold</th>
+                        <th class="drop-stat">Drop Items</th>
+                        <th class="trait-stat">Traits</th>
+                        <th class="note-stat">Note</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+        <div class="status" id="status">Loading enemy stats…</div>
+    </section>
+    <script src="enemy-viewer.js"></script>
+</body>
+</html>
