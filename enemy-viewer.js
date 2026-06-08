@@ -12,7 +12,9 @@ const THEME_MODE = document.getElementById('themeMode');
 const TABLE = document.querySelector('table');
 const TABLE_BODY = document.getElementById('table-body');
 const STATUS = document.getElementById('status');
+const DROP_ZONE = document.getElementById('dropZone');
 const THEME_STORAGE_KEY = 'enemyViewerThemeMode';
+let droppedData = null;
 
 let enemies = [];
 
@@ -314,11 +316,16 @@ function filterAndSort() {
     STATUS.textContent = `Showing ${filtered.length} of ${enemies.length} enemies (ID ${minId || 0}-${maxId || '∞'}${HIDE_NO_NAME.checked ? ', hiding blank names' : ''}${HIDE_NOTES.checked ? ', hiding notes' : ''}${HIDE_MAG.checked ? ', hiding MAT/MDF' : ''}).`;
 }
 
-async function loadEnemies() {
+async function loadEnemies(data = null) {
     try {
-        const response = await fetch(DATA_PATH, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const json = await response.json();
+        let json;
+        if (data) {
+            json = data;
+        } else {
+            const response = await fetch(DATA_PATH, { cache: 'no-store' });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            json = await response.json();
+        }
         enemies = Array.isArray(json)
             ? json.filter(item => item && item.id !== undefined).map(normalizeEnemy)
             : [];
@@ -326,6 +333,56 @@ async function loadEnemies() {
     } catch (error) {
         STATUS.innerHTML = `<span class="error">Unable to load enemy data: ${error.message}</span>`;
     }
+}
+
+function handleDragOver(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    DROP_ZONE.classList.add('drag-active');
+    document.body.classList.add('drag-active-global');
+}
+
+DROP_ZONE.addEventListener('dragover', handleDragOver);
+DROP_ZONE.addEventListener('dragleave', handleDragLeave);
+DROP_ZONE.addEventListener('drop', handleDrop);
+
+function handleDragLeave(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!event.relatedTarget || event.relatedTarget.nodeName === 'HTML') {
+        DROP_ZONE.classList.remove('drag-active');
+        document.body.classList.remove('drag-active-global');
+    }
+}
+
+function handleDrop(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.body.classList.remove('drag-active-global');
+    DROP_ZONE.classList.remove('drag-active');
+
+    const files = event.dataTransfer.files;
+    if (files.length === 0) return;
+
+    const file = files[0];
+    if (!file.name.endsWith('.json')) {
+        STATUS.innerHTML = `<span class="error">Please drop a JSON file.</span>`;
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        try {
+            droppedData = JSON.parse(e.target.result);
+            loadEnemies(droppedData);
+        } catch (error) {
+            STATUS.innerHTML = `<span class="error">Failed to parse JSON: ${error.message}</span>`;
+        }
+    };
+    reader.onerror = () => {
+        STATUS.innerHTML = `<span class="error">Failed to read file.</span>`;
+    };
+    reader.readAsText(file);
 }
 
 SEARCH.addEventListener('input', filterAndSort);
@@ -338,6 +395,10 @@ HIDE_NO_NAME.addEventListener('change', filterAndSort);
 HIDE_NOTES.addEventListener('change', filterAndSort);
 HIDE_MAG.addEventListener('change', filterAndSort);
 THEME_MODE.addEventListener('change', setThemePreference);
+document.addEventListener('dragover', handleDragOver);
+document.addEventListener('dragleave', handleDragLeave);
+document.addEventListener('drop', handleDrop);
+
 
 loadThemePreference();
 loadEnemies();

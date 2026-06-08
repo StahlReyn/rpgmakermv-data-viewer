@@ -11,7 +11,7 @@
         <div class="header-top">
             <div>
                 <h1>Enemy Stats Viewer</h1>
-                <p>Loads <code>data/Enemies.json</code> and renders a sortable enemy table.</p>
+                <p>Drag and drop a JSON file, or loads <code>data/Enemies.json</code> as fallback.</p>
             </div>
             <div class="theme-control">
                 <label>
@@ -106,6 +106,9 @@
                 </thead>
                 <tbody id="table-body"></tbody>
             </table>
+        </div>
+        <div id="dropZone" class="drop-zone">
+            <p>📥 Drop JSON file here</p>
         </div>
         <div class="status" id="status">Loading enemy stats…</div>
     </section>
