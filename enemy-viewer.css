@@ -154,6 +154,9 @@ th.drop-stat {
 th.trait-stat {
     width: 16rem;
 }
+th.ailment-stat {
+    width: 2rem;
+}
 th.note-stat {
     width: 32rem;
 }
@@ -225,9 +228,21 @@ td {
     display: none;
 }
 
+.hide-ailments .ailment-stat,
+.hide-ailments .ailment-cell {
+    display: none;
+}
+
+.ailment-cell {
+    font-family: Impact, Arial Black, sans-serif;
+    text-align: center;
+    font-weight: bolder;
+}
+
 /* Status and error messages */
 .status {
-    margin-top: 12px;
+    margin: 0;
+    margin-bottom: 4px;
     color: var(--color-status);
     font-size: 14px;
 }

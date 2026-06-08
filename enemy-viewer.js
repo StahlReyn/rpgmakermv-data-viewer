@@ -8,6 +8,7 @@ const MAX_ID = document.getElementById('maxId');
 const HIDE_NO_NAME = document.getElementById('hideNoName');
 const HIDE_NOTES = document.getElementById('hideNotes');
 const HIDE_MAG = document.getElementById('hideMag');
+const HIDE_AILMENTS = document.getElementById('hideAilments');
 const THEME_MODE = document.getElementById('themeMode');
 const TABLE = document.querySelector('table');
 const TABLE_BODY = document.getElementById('table-body');
@@ -190,6 +191,39 @@ function formatTraits(traits) {
     return `<ul class="trait-list">${rows.join('')}</ul>`;
 }
 
+const AILMENT_IDS = [235, 236, 237, 238, 239, 240, 241, 242];
+
+const STATUS_TO_LABEL = {
+    'WEAK': '!',
+    'IMMUNE': '◼',
+    'STRONG': '◻',
+};
+
+// Returns in form of ID-to-type mapping, e.g. {235: 'WEAK', 236: 'IMMUNE', ...}
+function parseAilments(note) {
+    if (!note) return {};
+    const ailments = {};
+    for (const id of AILMENT_IDS) {
+        for (const type of ['WEAK', 'IMMUNE', 'STRONG']) {
+            const pattern = new RegExp(`<AILMENT ${type}: ${id}>`, 'i');
+            if (pattern.test(note)) {
+                ailments[id] = type;
+                break;
+            }
+        }
+    }
+    return ailments;
+}
+
+// Convert ID-to-type mapping into multiple td elements
+function ailmentCells(ailments) {
+    const cells = AILMENT_IDS.map(id => {
+        const type = ailments[id] || '-';
+        return `<td class="ailment-cell">${STATUS_TO_LABEL[type] || '-'}</td>`;
+    });
+    return cells.join('');
+}
+
 function normalizeEnemy(item) {
     const params = Array.isArray(item.params) ? item.params : [];
     const normalized = {
@@ -250,7 +284,7 @@ function setThemePreference(event) {
 function renderTable(rows) {
     TABLE_BODY.innerHTML = '';
     if (rows.length === 0) {
-        TABLE_BODY.innerHTML = '<tr><td colspan="15">No matching enemies found.</td></tr>';
+        TABLE_BODY.innerHTML = '<tr><td colspan="16">No matching enemies found.</td></tr>';
         return;
     }
 
@@ -273,6 +307,7 @@ function renderTable(rows) {
             <td>${escapeHtml(enemy.gold)}</td>
             <td class="drop-item-cell cell">${enemy.dropItems}</td>
             <td class="trait-cell cell">${enemy.traits}</td>
+            ${ailmentCells(parseAilments(enemy.note))}
             <td class="note-cell">${renderNote(enemy.note, singleLine)}</td>
         `;
         fragment.appendChild(tr);
@@ -334,8 +369,9 @@ function filterAndSort() {
     TABLE.classList.toggle('single-line', ROW_MODE.value === 'singleline');
     TABLE.classList.toggle('hide-mag', HIDE_MAG.checked);
     TABLE.classList.toggle('hide-notes', HIDE_NOTES.checked);
+    TABLE.classList.toggle('hide-ailments', HIDE_AILMENTS.checked);
     renderTable(filtered);
-    STATUS.textContent = `Showing ${filtered.length} of ${enemies.length} enemies (ID ${minId || 0}-${maxId || '∞'}${HIDE_NO_NAME.checked ? ', hiding blank names' : ''}${HIDE_NOTES.checked ? ', hiding notes' : ''}${HIDE_MAG.checked ? ', hiding MAT/MDF' : ''}).`;
+    STATUS.textContent = `Showing ${filtered.length} of ${enemies.length} enemies (ID ${minId || 0}-${maxId || '∞'}${HIDE_NO_NAME.checked ? ', hiding blank names' : ''}${HIDE_NOTES.checked ? ', hiding notes' : ''}${HIDE_MAG.checked ? ', hiding MAT/MDF' : ''}${HIDE_AILMENTS.checked ? ', hiding ailments' : ''}).`;
 }
 
 async function loadEnemies(data = null) {
@@ -432,6 +468,7 @@ MAX_ID.addEventListener('input', filterAndSort);
 HIDE_NO_NAME.addEventListener('change', filterAndSort);
 HIDE_NOTES.addEventListener('change', filterAndSort);
 HIDE_MAG.addEventListener('change', filterAndSort);
+HIDE_AILMENTS.addEventListener('change', filterAndSort);
 THEME_MODE.addEventListener('change', setThemePreference);
 SELECT_FILE_BUTTON.addEventListener('click', openFileSelector);
 DROP_ZONE.addEventListener('click', openFileSelector);
