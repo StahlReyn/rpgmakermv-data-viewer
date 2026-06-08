@@ -265,15 +265,15 @@ function renderTable(rows) {
             <td>${escapeHtml(enemy.mp)}</td>
             <td>${escapeHtml(enemy.atk)}</td>
             <td>${escapeHtml(enemy.def)}</td>
-            <td class="param-mag hide">${escapeHtml(enemy.mat)}</td>
-            <td class="param-mag hide">${escapeHtml(enemy.mdf)}</td>
+            <td class="param-mag">${escapeHtml(enemy.mat)}</td>
+            <td class="param-mag">${escapeHtml(enemy.mdf)}</td>
             <td>${escapeHtml(enemy.agi)}</td>
             <td>${escapeHtml(enemy.luk)}</td>
             <td>${escapeHtml(enemy.exp)}</td>
             <td>${escapeHtml(enemy.gold)}</td>
             <td class="drop-item-cell cell">${enemy.dropItems}</td>
             <td class="trait-cell cell">${enemy.traits}</td>
-            <td class="note-cell hide">${renderNote(enemy.note, singleLine)}</td>
+            <td class="note-cell">${renderNote(enemy.note, singleLine)}</td>
         `;
         fragment.appendChild(tr);
     });

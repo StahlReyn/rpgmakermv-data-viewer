@@ -217,6 +217,9 @@ th.note-stat {
     width: 32rem;
 }
 
+table.hide-mag .param-mag {
+    display: none;
+}
 .single-line tbody tr {
     height: 40px;
 }
@@ -276,7 +279,8 @@ td {
 .single-line .cell > ul li:last-child::after {
     content: '';
 }
-:is(.hide-notes, .hide-mag) .hide {
+.hide-notes .note-stat,
+.hide-notes .note-cell {
     display: none;
 }
 
