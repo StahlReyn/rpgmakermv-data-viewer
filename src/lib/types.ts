@@ -52,4 +52,5 @@ export interface AppFilters {
     hideNotes: boolean;
     hideMag: boolean;
     themeMode: string;
+    viewMode: 'list' | 'grid';
 }

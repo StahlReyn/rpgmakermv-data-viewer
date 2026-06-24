@@ -33,6 +33,12 @@
         </div>
         
         <div class="control-grid">
+            <label>View:
+                <select bind:value={filters.viewMode}>
+                    <option value="list">List</option>
+                    <option value="grid">Grid</option>
+                </select>
+            </label>
             <label>Sort by:
                 <select bind:value={filters.sortKey}>
                     <option value="id">ID</option>
@@ -67,6 +73,10 @@
         gap: 16px;
         align-items: center;
         margin-top: 12px;
+        input, select {
+            min-width: 8em;
+            width: 1em;
+        }
     }
     .checkboxes {
         display: flex;

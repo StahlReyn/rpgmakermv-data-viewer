@@ -27,7 +27,8 @@
         hideNoName: true,
         hideNotes: true,
         hideMag: true,
-        themeMode: 'browser'
+        themeMode: 'browser',
+        viewMode: 'grid'
     });
 
     // Data Loaders
@@ -43,9 +44,14 @@
             enemies = Array.isArray(json) 
                 ? json.filter(item => item && item.id !== undefined).map(normalizeEnemy) 
                 : [];
-        } catch (error: any) {
+        } catch (error) {
             isError = true;
-            statusMessage = `Unable to load enemy data: ${error.message}`;
+            statusMessage = "Unable to load enemy data: "
+            if (error instanceof Error) {
+                statusMessage += error.message;
+            } else {
+                statusMessage += String(error);
+            }
         }
     }
 
@@ -59,9 +65,14 @@
         reader.onload = (e: ProgressEvent<FileReader>) => {
             try {
                 if (typeof e.target?.result === 'string') loadEnemies(JSON.parse(e.target.result));
-            } catch (error: any) {
+            } catch (error) {
                 isError = true;
-                statusMessage = `Failed to parse JSON: ${error.message}`;
+                statusMessage = "Failed to parse JSON: "
+                if (error instanceof Error) {
+                    statusMessage += error.message;
+                } else {
+                    statusMessage += String(error);
+                }
             }
         };
         reader.readAsText(file);
@@ -96,6 +107,17 @@
                 ? String(aVal).localeCompare(String(bVal), undefined, { numeric: true })
                 : String(bVal).localeCompare(String(aVal), undefined, { numeric: true });
         })
+    );
+
+    // Calculate dynamic grid columns based on active filters
+    let listGridTemplate = $derived(
+        `160px ` + // ID & Name
+        `50px 50px 50px 50px ` + // HP, MP, ATK, DEF
+        (filters.hideMag ? `` : `50px 50px `) + // MAT, MDF
+        `50px 50px ` + // AGI, LUK
+        `60px 60px ` + // EXP, Gold
+        `1fr 1fr ` + // Drops, Traits
+        (filters.hideNotes ? `` : `1.5fr`) // Notes
     );
 
     // Side Effects
@@ -142,7 +164,33 @@
     <section class="content">
         <div class="status" class:error={isError}>{statusMessage}</div>
         
-        <div class="card-grid">
+        <div class="card-grid" 
+            class:list-view={filters.viewMode === 'list'} 
+            style="--list-grid-template: {listGridTemplate}">
+
+            {#if filters.viewMode === 'list' && filteredEnemies.length > 0}
+                <div class="list-header">
+                    <div class="lh-cell">ID / Name</div>
+                    <div class="lh-cell">HP</div>
+                    <div class="lh-cell">MP</div>
+                    <div class="lh-cell">ATK</div>
+                    <div class="lh-cell">DEF</div>
+                    {#if !filters.hideMag}
+                        <div class="lh-cell">MAT</div>
+                        <div class="lh-cell">MDF</div>
+                    {/if}
+                    <div class="lh-cell">AGI</div>
+                    <div class="lh-cell">LUK</div>
+                    <div class="lh-cell">EXP</div>
+                    <div class="lh-cell">Gold</div>
+                    <div class="lh-cell">Drops</div>
+                    <div class="lh-cell">Traits</div>
+                    {#if !filters.hideNotes}
+                        <div class="lh-cell">Notes</div>
+                    {/if}
+                </div>
+            {/if}
+
             {#if filteredEnemies.length === 0}
                 <div class="empty-state">No matching enemies found.</div>
             {:else}
@@ -151,14 +199,15 @@
                         {enemy} 
                         hideNotes={filters.hideNotes} 
                         hideMag={filters.hideMag} 
+                        viewMode={filters.viewMode} 
                     />
                 {/each}
             {/if}
         </div>
         
-        <div class="drop-zone" class:drag-active={dragActive} onclick={() => fileInput?.click()}>
+        <div class="drop-zone" class:drag-active={dragActive}>
             <p>📥 Drop JSON file here</p>
-            <button type="button">Select JSON file</button>
+            <button type="button" onclick={() => fileInput?.click()}>Select JSON file</button>
             <input bind:this={fileInput} type="file" accept=".json,application/json" hidden onchange={(e) => processSelectedFile((e.target as HTMLInputElement).files![0])} />
         </div>
     </section>
@@ -170,6 +219,27 @@
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 16px;
         padding: 16px 0;
+    }
+    /* Forces the grid into a single vertical column for list rows */
+    .card-grid.list-view {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    .list-header {
+        display: grid;
+        grid-template-columns: var(--list-grid-template);
+        gap: 12px;
+        padding: 12px 16px;
+        background: var(--color-header-alt);
+        border: 1px solid var(--color-border);
+        border-radius: 8px 8px 0 0;
+        font-weight: bold;
+        color: var(--color-muted);
+        text-transform: uppercase;
+        font-size: 0.8em;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
     .empty-state {
         grid-column: 1 / -1;
