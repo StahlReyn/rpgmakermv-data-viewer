@@ -111,7 +111,7 @@
 
     // Calculate dynamic grid columns based on active filters
     let listGridTemplate = $derived(
-        `160px ` + // ID & Name
+        `200px ` + // ID & Name
         `50px 50px 50px 50px ` + // HP, MP, ATK, DEF
         (filters.hideMag ? `` : `50px 50px `) + // MAT, MDF
         `50px 50px ` + // AGI, LUK
@@ -223,7 +223,7 @@
     /* Forces the grid into a single vertical column for list rows */
     .card-grid.list-view {
         grid-template-columns: 1fr;
-        gap: 8px;
+        gap: 0px;
     }
     .list-header {
         display: grid;

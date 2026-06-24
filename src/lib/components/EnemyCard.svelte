@@ -16,13 +16,13 @@
 
 <div class="card" class:list-mode={viewMode === 'list'}>
     <div class="card-header">
-        <span class="enemy-id">#{enemy.id}</span>
+        <span class="enemy-id">{enemy.id}</span>
         <h2 class="enemy-name" title={enemy.name}>{enemy.name || 'Unnamed'}</h2>
     </div>
 
     <div class="stats-grid">
-        <div class="stat"><span class="label">HP</span> <span class="val">{enemy.hp}</span></div>
-        <div class="stat"><span class="label">MP</span> <span class="val">{enemy.mp}</span></div>
+        <div class="stat"><span class="label">HP</span> <span class="val" style="color:darkred">{enemy.hp}</span></div>
+        <div class="stat"><span class="label">MP</span> <span class="val" style="color:darkblue">{enemy.mp}</span></div>
         <div class="stat"><span class="label">ATK</span> <span class="val">{enemy.atk}</span></div>
         <div class="stat"><span class="label">DEF</span> <span class="val">{enemy.def}</span></div>
         
@@ -48,7 +48,7 @@
             {:else if viewMode === 'list'}
                 <span class="val" title={enemy.dropItems.join(', ')}>{enemy.dropItems.join(', ')}</span>
             {:else}
-                <ul>{#each enemy.dropItems as drop}<li>{drop}</li>{/each}</ul>
+                <ul>{#each enemy.dropItems as drop, i (i)}<li>{drop}</li>{/each}</ul>
             {/if}
         </div>
 
@@ -59,18 +59,18 @@
             {:else if viewMode === 'list'}
                 <span class="val" title={enemy.traits.join(', ')}>{enemy.traits.join(', ')}</span>
             {:else}
-                <ul>{#each enemy.traits as trait}<li>{trait}</li>{/each}</ul>
+                <ul>{#each enemy.traits as trait, i (i)}<li>{trait}</li>{/each}</ul>
             {/if}
         </div>
     </div>
 
     {#if !hideNotes && enemy.note}
         <div class="notes">
-            {#if viewMode === 'grid'}<strong>Notes:</strong>{/if}
             {#if viewMode === 'list'}
-                <p class="truncate" title={enemy.note}>{enemy.note.replace(/\n/g, ' ')}</p>
+                <pre class="truncate" title={enemy.note}>{enemy.note.replace(/\n/g, ' ')}</pre>
             {:else}
-                <p>{@html enemy.note.replace(/\n/g, '<br>')}</p>
+                <strong>Notes:</strong>
+                <pre>{enemy.note}</pre>
             {/if}
         </div>
     {/if}
@@ -97,7 +97,7 @@
         border-bottom: 1px solid var(--color-border-muted);
         padding-bottom: 8px;
     }
-    .enemy-id { color: var(--color-muted); font-family: monospace; font-size: 1.1em; }
+    .enemy-id { color: var(--color-muted); font-family: monospace; font-size: 1em; text-align: right; width: 3em;}
     .enemy-name { margin: 0; font-size: 1.25em; }
     
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: var(--color-bg); padding: 8px; border-radius: 4px; }
@@ -132,6 +132,9 @@
     }
     .card.list-mode:hover {
         background: var(--color-row-hover);
+    }
+    .card.list-mode h2 {
+        font-size: 1em;
     }
 
     /* Flatten internal layout wrappers directly into the parent grid columns */
@@ -174,7 +177,7 @@
         padding: 0;
         min-width: 0;
     }
-    .card.list-mode .notes p.truncate {
+    pre.truncate {
         margin: 0;
         white-space: nowrap;
         overflow: hidden;
