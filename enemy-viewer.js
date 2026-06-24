@@ -298,7 +298,7 @@ function filterAndSort() {
             } else if (token.startsWith('-"') && token.endsWith('"')) {
                 negativeTerms.push(normalized.slice(1));
             } else {
-                positiveTerms.push(normalized.replace(/^\-/, ''));
+                positiveTerms.push(normalized.replace(/^-/, ''));
             }
         });
 
@@ -390,7 +390,7 @@ function handleDrop(event) {
     processSelectedFile(file);
 }
 
-function openFileSelector(event) {
+function openFileSelector() {
     // event.preventDefault();
     FILE_INPUT.value = '';
     FILE_INPUT.click();
