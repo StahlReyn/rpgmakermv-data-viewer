@@ -1,6 +1,7 @@
 <script lang="ts">
-    import type { NormalizedEnemy } from '../types';
-    import TagList from '$lib/components/TagList.svelte';
+    import type { Enemy } from '../types';
+    import DropList from '$lib/components/DropList.svelte';
+	import TraitList from './TraitList.svelte';
 
     let { 
         enemy, 
@@ -8,16 +9,11 @@
         hideMag = false,
         viewMode = 'list'
     }: { 
-        enemy: NormalizedEnemy; 
+        enemy: Enemy; 
         hideNotes?: boolean; 
         hideMag?: boolean;
         viewMode?: 'list' | 'grid';
     } = $props();
-
-    // Normal callback signature receiving parameters directly
-	function handleTagClick({ item, index }: { item: string; index: number }) {
-		console.log(`Clicked ${item} at index ${index}`);
-	}
 </script>
 
 <div class="card" class:list-mode={viewMode === 'list'}>
@@ -27,18 +23,18 @@
     </div>
 
     <div class="stats-grid">
-        <div class="stat"><span class="label">HP</span> <span class="val" style="color:darkred">{enemy.hp}</span></div>
-        <div class="stat"><span class="label">MP</span> <span class="val" style="color:darkblue">{enemy.mp}</span></div>
-        <div class="stat"><span class="label">ATK</span> <span class="val">{enemy.atk}</span></div>
-        <div class="stat"><span class="label">DEF</span> <span class="val">{enemy.def}</span></div>
+        <div class="stat"><span class="label">HP</span> <span class="val" style="color:darkred">{enemy.params[0]}</span></div>
+        <div class="stat"><span class="label">MP</span> <span class="val" style="color:darkblue">{enemy.params[1]}</span></div>
+        <div class="stat"><span class="label">ATK</span> <span class="val">{enemy.params[2]}</span></div>
+        <div class="stat"><span class="label">DEF</span> <span class="val">{enemy.params[3]}</span></div>
         
         {#if !hideMag}
-            <div class="stat"><span class="label">MAT</span> <span class="val">{enemy.mat}</span></div>
-            <div class="stat"><span class="label">MDF</span> <span class="val">{enemy.mdf}</span></div>
+            <div class="stat"><span class="label">MAT</span> <span class="val">{enemy.params[4]}</span></div>
+            <div class="stat"><span class="label">MDF</span> <span class="val">{enemy.params[5]}</span></div>
         {/if}
         
-        <div class="stat"><span class="label">AGI</span> <span class="val">{enemy.agi}</span></div>
-        <div class="stat"><span class="label">LUK</span> <span class="val">{enemy.luk}</span></div>
+        <div class="stat"><span class="label">AGI</span> <span class="val">{enemy.params[6]}</span></div>
+        <div class="stat"><span class="label">LUK</span> <span class="val">{enemy.params[7]}</span></div>
     </div>
 
     <div class="rewards">
@@ -47,20 +43,18 @@
     </div>
     <div class="list-section">
         <strong class="list-label">Drops:</strong>
-        <TagList 
-            items={enemy.dropItems} 
+        <DropList 
+            drops={enemy.dropItems} 
             singleLine={viewMode === 'list'} 
             fallbackText="No drops"
-            onTagClick={handleTagClick}
         />
     </div>
     <div class="list-section">
         <strong class="list-label">Traits:</strong>
-        <TagList 
-            items={enemy.traits} 
+        <TraitList 
+            traits={enemy.traits} 
             singleLine={viewMode === 'list'} 
             fallbackText="No drops"
-            onTagClick={handleTagClick}
         />
     </div>
 

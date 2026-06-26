@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import type { RawEnemy, NormalizedEnemy, AppFilters } from '$lib/types';
-    import { normalizeEnemy } from '$lib/utils';
+    import type { Enemy, AppFilters } from '$lib/types';
     import HeaderControls from '$lib/components/HeaderControls.svelte';
     import EnemyCard from '$lib/components/EnemyCard.svelte';
     import '$lib/global.css'
@@ -11,7 +10,7 @@
     const THEME_STORAGE_KEY: string = 'enemyViewerThemeMode';
 
     // State Variables
-    let enemies = $state<NormalizedEnemy[]>([]);
+    let enemies = $state<Enemy[]>([]);
     let statusMessage = $state('Loading enemy stats…');
     let isError = $state(false);
     let dragActive = $state(false);
@@ -32,7 +31,7 @@
     });
 
     // Data Loaders
-    async function loadEnemies(data: RawEnemy[] | null = null): Promise<void> {
+    async function loadEnemies(data: Enemy[] | null = null): Promise<void> {
         try {
             isError = false;
             let json = data;
@@ -41,9 +40,7 @@
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 json = await response.json();
             }
-            enemies = Array.isArray(json) 
-                ? json.filter(item => item && item.id !== undefined).map(normalizeEnemy) 
-                : [];
+            enemies = Array.isArray(json) ? json.filter(item => item && item.id !== undefined) : [];
         } catch (error) {
             isError = true;
             statusMessage = "Unable to load enemy data: "
@@ -81,32 +78,33 @@
     // Derived filtering algorithm
     let filteredEnemies = $derived(
         enemies.filter(enemy => {
-            const query = filters.searchQuery.trim().toLowerCase();
-            if (query) {
-                const tokens = query.match(/(-?"[^"]+"|[^"\s]+)/g) || [];
-                const positiveTerms = tokens.filter(t => !t.startsWith('-')).map(t => t.replace(/"/g, ''));
-                const negativeTerms = tokens.filter(t => t.startsWith('-')).map(t => t.slice(1).replace(/"/g, ''));
+            // const query = filters.searchQuery.trim().toLowerCase();
+            // if (query) {
+            //     const tokens = query.match(/(-?"[^"]+"|[^"\s]+)/g) || [];
+            //     const positiveTerms = tokens.filter(t => !t.startsWith('-')).map(t => t.replace(/"/g, ''));
+            //     const negativeTerms = tokens.filter(t => t.startsWith('-')).map(t => t.slice(1).replace(/"/g, ''));
                 
-                const text = enemy.searchText;
-                if (!positiveTerms.every(term => text.includes(term))) return false;
-                if (!negativeTerms.every(term => !text.includes(term))) return false;
-            }
+            //     const text = enemy.searchText;
+            //     if (!positiveTerms.every(term => text.includes(term))) return false;
+            //     if (!negativeTerms.every(term => !text.includes(term))) return false;
+            // }
             const id = Number(enemy.id) || 0;
             if (filters.minId !== null && id < filters.minId) return false;
             if (filters.maxId !== null && id > filters.maxId) return false;
             if (filters.hideNoName && (!enemy.name || enemy.name.trim() === '')) return false;
 
             return true;
-        }).sort((a, b) => {
-            const aVal = a[filters.sortKey] ?? '';
-            const bVal = b[filters.sortKey] ?? '';
-            if (typeof aVal === 'number' && typeof bVal === 'number') {
-                return filters.sortDir === 'asc' ? aVal - bVal : bVal - aVal;
-            }
-            return filters.sortDir === 'asc'
-                ? String(aVal).localeCompare(String(bVal), undefined, { numeric: true })
-                : String(bVal).localeCompare(String(aVal), undefined, { numeric: true });
         })
+        // .sort((a, b) => {
+        //     const aVal = a[filters.sortKey] ?? '';
+        //     const bVal = b[filters.sortKey] ?? '';
+        //     if (typeof aVal === 'number' && typeof bVal === 'number') {
+        //         return filters.sortDir === 'asc' ? aVal - bVal : bVal - aVal;
+        //     }
+        //     return filters.sortDir === 'asc'
+        //         ? String(aVal).localeCompare(String(bVal), undefined, { numeric: true })
+        //         : String(bVal).localeCompare(String(aVal), undefined, { numeric: true });
+        // })
     );
 
     // Calculate dynamic grid columns based on active filters
