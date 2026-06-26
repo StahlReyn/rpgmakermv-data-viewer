@@ -33,7 +33,9 @@
         {#each dataList as name (name)}
             <NameIDList 
                 title={name} 
-                resource={new JsonResource(`/sample_data/${name}.json`)} 
+                resource={new JsonResource(
+                    `/sample_data/${name}.json`,
+                )} 
                 filterBlank={hideBlank}
             />
         {/each}

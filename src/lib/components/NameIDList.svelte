@@ -1,12 +1,18 @@
 <script lang="ts">
 	import type { JsonResource } from '../fetcher.svelte';
+    
+    interface Item {
+        id: number;
+        name: string;
+    }
+
 	let { 
         title, 
         resource, 
         filterBlank = true
     }: { 
         title: string, 
-        resource: JsonResource, 
+        resource: JsonResource<Item>, 
         filterBlank: boolean 
     } = $props();
 
