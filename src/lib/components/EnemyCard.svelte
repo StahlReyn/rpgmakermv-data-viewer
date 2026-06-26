@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { NormalizedEnemy } from '../types';
+    import TagList from '$lib/components/TagList.svelte';
 
     let { 
         enemy, 
@@ -12,6 +13,11 @@
         hideMag?: boolean;
         viewMode?: 'list' | 'grid';
     } = $props();
+
+    // Normal callback signature receiving parameters directly
+	function handleTagClick({ item, index }: { item: string; index: number }) {
+		console.log(`Clicked ${item} at index ${index}`);
+	}
 </script>
 
 <div class="card" class:list-mode={viewMode === 'list'}>
@@ -39,29 +45,23 @@
         <div class="stat"><span class="label">EXP</span> <span class="val">{enemy.exp}</span></div>
         <div class="stat"><span class="label">Gold</span> <span class="val">{enemy.gold}</span></div>
     </div>
-
-    <div class="lists">
-        <div class="list-section">
-            <strong class="list-label">Drops:</strong>
-            {#if enemy.dropItems.length === 0}
-                <span class="muted">None</span>
-            {:else if viewMode === 'list'}
-                <span class="val" title={enemy.dropItems.join(', ')}>{enemy.dropItems.join(', ')}</span>
-            {:else}
-                <ul>{#each enemy.dropItems as drop, i (i)}<li>{drop}</li>{/each}</ul>
-            {/if}
-        </div>
-
-        <div class="list-section">
-            <strong class="list-label">Traits:</strong>
-            {#if enemy.traits.length === 0}
-                <span class="muted">None</span>
-            {:else if viewMode === 'list'}
-                <span class="val" title={enemy.traits.join(', ')}>{enemy.traits.join(', ')}</span>
-            {:else}
-                <ul>{#each enemy.traits as trait, i (i)}<li>{trait}</li>{/each}</ul>
-            {/if}
-        </div>
+    <div class="list-section">
+        <strong class="list-label">Drops:</strong>
+        <TagList 
+            items={enemy.dropItems} 
+            singleLine={viewMode === 'list'} 
+            fallbackText="No drops"
+            onTagClick={handleTagClick}
+        />
+    </div>
+    <div class="list-section">
+        <strong class="list-label">Traits:</strong>
+        <TagList 
+            items={enemy.traits} 
+            singleLine={viewMode === 'list'} 
+            fallbackText="No drops"
+            onTagClick={handleTagClick}
+        />
     </div>
 
     {#if !hideNotes && enemy.note}
@@ -105,12 +105,7 @@
     .stat .label { color: var(--color-muted); font-size: 0.8em; text-transform: uppercase; }
     
     .rewards { display: flex; gap: 16px; font-weight: bold; color: #d4af37; }
-    .lists { display: flex; gap: 16px; }
-    .list-section { flex: 1; font-size: 0.9em; }
-    ul { margin: 4px 0 0; padding-left: 16px; }
     .notes { background: var(--color-header-alt); padding: 8px; border-radius: 4px; font-size: 0.85em; }
-    .notes p { margin: 4px 0 0; }
-    .muted { color: var(--color-muted); }
 
     /* -------------------------------------
        2. List Mode Override (Table Row Match)
@@ -139,8 +134,7 @@
 
     /* Flatten internal layout wrappers directly into the parent grid columns */
     .card.list-mode .stats-grid,
-    .card.list-mode .rewards,
-    .card.list-mode .lists {
+    .card.list-mode .rewards {
         display: contents;
     }
 

@@ -28,7 +28,7 @@
         hideNotes: true,
         hideMag: true,
         themeMode: 'browser',
-        viewMode: 'grid'
+        viewMode: 'list'
     });
 
     // Data Loaders
