@@ -16,7 +16,8 @@
         "Animations",
     ]
 
-    let hideBlank = $state(false)
+    let hideBlank = $state(true)
+    let hideReserved = $state(true)
 </script>
 
 <div class="main-container">
@@ -28,6 +29,12 @@
                 Hide Blank
             </label>
         </div>
+        <div class="options">
+            <label>
+                <input type="checkbox" bind:checked={hideReserved}>
+                Hide Reserved
+            </label>
+        </div>
     </div>
     <div class="list-container">
         {#each dataList as name (name)}
@@ -36,7 +43,8 @@
                 resource={new JsonResource(
                     `/sample_data/${name}.json`,
                 )} 
-                filterBlank={hideBlank}
+                hideBlank={hideBlank}
+                hideReserved={hideReserved}
             />
         {/each}
     </div>
@@ -51,9 +59,8 @@ h1 {
 .main-container {
     width: 100vw;
     height: 100vh;
-}
-.body-pad {
-    padding: 30px;
+    display: flex;
+    flex-direction: column;
 }
 .header {
     border-bottom: 2px solid gray;
@@ -72,8 +79,7 @@ h1 {
     gap: 1rem;
     padding: 1rem;
     height: max-content;
-}
-.list-container {
     overflow: scroll;
+    flex-grow: 1;
 }
 </style>
