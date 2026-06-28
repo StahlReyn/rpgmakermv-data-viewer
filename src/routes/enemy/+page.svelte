@@ -6,7 +6,7 @@
     import '$lib/global.css'
     import './page.css'
 
-    const DATA_PATH: string = '/sample_data/Enemies.json';
+    const DATA_PATH: string = '/data/Enemies.json';
     const THEME_STORAGE_KEY: string = 'enemyViewerThemeMode';
 
     // State Variables

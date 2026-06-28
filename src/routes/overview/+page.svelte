@@ -41,7 +41,7 @@
             <NameIDList 
                 title={name} 
                 resource={new JsonResource(
-                    `/sample_data/${name}.json`,
+                    `/data/${name}.json`,
                 )} 
                 hideBlank={hideBlank}
                 hideReserved={hideReserved}
